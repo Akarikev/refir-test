@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Refir from "refir";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "./ui/button";
@@ -10,11 +10,13 @@ export default function RefirComponent() {
   const [addUserName, setAddUserName] = useState("");
   const [addUserEmail, setAddUserEmail] = useState("");
   const [addUserLoader, setAddUserLoader] = useState(false);
+  const [usersUid, setUsersUid] = useState(uuidv4());
+
   const refir = new Refir();
   refir.configure({ apiKey: "I9BtOyeUoxFW51oVqC6DMPsyLxyM5c8X" });
 
   const user = {
-    userId: uuidv4(),
+    userId: usersUid,
     name: addUserName,
     email: addUserEmail,
   };
@@ -39,6 +41,7 @@ export default function RefirComponent() {
 
   const getUserRefr = async () => {
     const userId = user.userId;
+    setUsersUid(userId);
     const referralCode = await refir.getUserById(userId);
 
     console.log(referralCode);
