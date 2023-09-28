@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Refir from "refir";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "./ui/button";
@@ -11,7 +11,7 @@ export default function RefirComponent() {
   const [addUserEmail, setAddUserEmail] = useState("");
   const [addUserLoader, setAddUserLoader] = useState(false);
   const [usersUid, setUsersUid] = useState(uuidv4());
-
+  const [referralCode, setReferralCode] = useState("");
   const refir = new Refir();
   refir.configure({ apiKey: "I9BtOyeUoxFW51oVqC6DMPsyLxyM5c8X" });
 
@@ -42,9 +42,9 @@ export default function RefirComponent() {
   const getUserRefr = async () => {
     const userId = user.userId;
     setUsersUid(userId);
-    const referralCode = await refir.getUserById(userId);
-
-    console.log(referralCode);
+    const code = await refir.getUserById(userId);
+    setReferralCode(code);
+    console.log(code);
 
     if (referralCode) {
       console.log(`User's referral code: ${referralCode}`);
@@ -52,6 +52,10 @@ export default function RefirComponent() {
       console.error("Failed to get user referral code.");
     }
   };
+
+  useEffect(() => {
+    getUserRefr();
+  });
 
   return (
     <div>
@@ -86,6 +90,7 @@ export default function RefirComponent() {
       <Button onClick={getUserRefr} className="mt-3">
         Show Referral Code
       </Button>
+      {referralCode ? <p>Users Referral Code: {referralCode}</p> : ""}
     </div>
   );
 }
